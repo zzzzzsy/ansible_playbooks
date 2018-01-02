@@ -1,0 +1,11 @@
+[builder-server]
+localhost
+
+[zabbix-server]
+10.215.71.175
+
+[zabbix-agent]
+10.215.71.177
+10.215.71.176
+
+

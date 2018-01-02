@@ -1,0 +1,49 @@
+---
+# this role contains zabbix-server play for server node
+
+- name: remove tmp workspace
+  file:
+    path: "{{server_tmp_wksp}}"
+    state: absent
+
+- name: create tmp workspace
+  file:
+    path: "{{server_tmp_wksp}}"
+    state: directory
+    mode: 0755
+
+- name: copy server image to tmp workspace
+  copy:
+    src: "{{zs_image_archive}}"
+    dest: "{{server_tmp_wksp}}/{{zs_image_tar}}"
+
+- name: copy image env file to tmp workspace
+  template: >
+    src="{{server_src}}/templates/zs_image_env.j2"
+    dest="{{server_tmp_wksp}}/zs_image.env"
+
+- name: copy docker-py-bin file
+  copy:
+    src: "{{server_src}}/files/docker-py-install.bin"
+    dest: "{{server_tmp_wksp}}/docker-py-install.bin"
+
+- name: install docker-py
+  command: "sh {{server_tmp_wksp}}/docker-py-install.bin"
+
+- name: load image from archive
+  docker_image:
+    name: "{{zs_new_image_name}}"
+    tag: "{{zs_new_image_tag}}"
+    push: no
+    load_path: "{{server_tmp_wksp}}/{{zs_image_tar}}"
+
+- name: docker run zabbix-server
+  docker_container:
+    name: "{{server_image_name}}"
+    env_file: "{{server_tmp_wksp}}/zs_image.env"   
+    image: "{{zs_new_image_name}}:{{zs_new_image_tag}}"
+    published_ports:
+    - "80:80"
+    - "10051:10051"
+    - "10052:10052"
+    links: "{{server_db_image_name}}:{{zdb_db_host}}"

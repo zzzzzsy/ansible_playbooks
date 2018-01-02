@@ -1,0 +1,14 @@
+---
+
+#- hosts: builder-server
+#  roles:
+#  - download
+
+- hosts: zabbix-server
+  roles:
+  - db
+  - server
+
+#- hosts: zabbix-agent
+#  roles:
+#  - agent

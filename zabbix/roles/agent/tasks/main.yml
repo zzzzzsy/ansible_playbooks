@@ -1,0 +1,43 @@
+---
+# this role contains zabbix-agent play for all agent nodes
+
+- name: remove tmp workspace
+  file:
+    path: "{{agent_tmp_wksp}}"
+    state: absent
+
+- name: create tmp workspace
+  file:
+    path: "{{agent_tmp_wksp}}"
+    state: directory
+    mode: 0755
+
+- name: copy rpm package to agent
+  copy:
+    src: "{{agent_src}}/files/{{agent_rpm_pkg}}"
+    dest: "{{agent_tmp_wksp}}/{{agent_rpm_pkg}}"
+
+- name: install zabbix noarch
+  yum:
+    pkg: "{{agent_tmp_wksp}}/{{agent_rpm_pkg}}"
+    state: present
+
+- name: install zabbix agent
+  yum:
+    pkg: zabbix-agent
+    state: present
+  register: iza
+
+#- name: debug info
+#  debug: "var={{item}}"
+#  with_items: iza.results
+
+- name: copy zabbix_agentd.conf file
+  template: >
+    src="{{agent_src}}/templates/zabbix_agentd.conf.j2"
+    dest="{{agent_conf}}/zabbix_agentd.conf"
+
+- name: start zabbix-agent service
+  service:
+    name: zabbix-agent
+    state: started

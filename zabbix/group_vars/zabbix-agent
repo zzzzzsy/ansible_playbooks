@@ -1,0 +1,17 @@
+---
+# The variables file used by the playbooks in the zabbix-agent group.
+# These don't have to be explicitly imported by vars_files: they are autopopulated.
+
+# parameters for zabbix_agentd.conf
+agent_log: /var/log/zabbix/zabbix_agentd.log
+agent_server: 10.215.71.175
+agent_listen_port: 10050
+agent_server_active: 10.215.71.175
+agent_host_name: "{{ansible_hostname}}"
+
+# parameters for agent server
+agent_rpm_pkg: zabbix-release-3.0-1.el7.noarch.rpm
+agent_src: "{{role_path}}"
+agent_tmp_wksp: /tmp/zabbix-agent-tmp
+agent_conf: /etc/zabbix
+

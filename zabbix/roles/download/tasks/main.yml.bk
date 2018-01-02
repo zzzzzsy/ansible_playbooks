@@ -1,0 +1,33 @@
+---
+# this role play for collecting resources from internet
+# assume that only builder server has internet access
+
+# ++++++++  docker images for zabbix-server && zabbix-db +++++++++++
+
+- name: download docker image for zabbix-server (zabbix-web 2 in 1)
+  docker_image: 
+    name: "{{zabbix-server-image}}"
+    state: present
+
+- name: archive zabbix-server image
+  docker_image:
+    name: "{{zabbix-server-image}}"
+    archive_path: /roles/server/files/zabbix-server-image.tar
+
+- name: download docker image for zabbix-db
+  docker_image:
+    name: "{{zabbix-db-image}}"
+    state: present
+
+- name: archive zabbix-db image
+  docker_image:
+    name: "{{zabbix-db-image}}"
+    archive_path: /roles/db/files/zabbix-db-image.tar
+
+
+# ++++++++ rpm package for zabbix-agent ++++++++++++++++++++
+
+- name: download rpm package for zabbix-agent
+  get_url:
+    url: "{{zabbix-repo}}/{{zabbix-rpm-pkg}}"
+    dest: "/roles/agent/files/{{zabbix-rpm-pkg}}"

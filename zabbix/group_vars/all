@@ -1,0 +1,28 @@
+---
+# The variables file used by the playbooks in all groups.
+# And all variables used by group builder-server (localhost)
+# These don't have to be explicitly imported by vars_files: they are autopopulated.
+
+zs_image: million12/zabbix-server
+zs_image_tar: zabbix-server-image.tar
+zs_image_archive: "{{inventory_dir}}/roles/server/files/{{zs_image_tar}}"
+zs_dockerfile: "{{inventory_dir}}/roles/download/files"
+zs_new_image_name: zabbix-server
+zs_new_image_tag: modified
+
+zdb_image: million12/mariadb
+zdb_image_tar: zabbix-db-image.tar
+zdb_image_archive: "{{inventory_dir}}/roles/db/files/{{zdb_image_tar}}"
+zdb_db_host: zabbix.db
+zdb_db_name: zabbix
+zdb_db_user: zabbix
+zdb_db_pwd: zabbix
+zdb_db_port: 3306
+
+# timezone for zabbix-web server
+zwb_timezone: Asia/Shanghai
+
+zabbix_repo: http://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64
+zabbix_rpm_pkg: zabbix-release-3.0-1.el7.noarch.rpm
+
+za_rpm_archive: "{{inventory_dir}}/roles/agent/files/{{zabbix_rpm_pkg}}"

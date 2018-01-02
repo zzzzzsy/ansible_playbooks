@@ -1,0 +1,57 @@
+---
+# this role play for collecting resources from internet
+# assume that only builder server has internet access
+
+# ++++++++  docker images for zabbix-server && zabbix-db +++++++++++
+
+- name: download docker image for zabbix-server (zabbix-web 2 in 1)
+  docker_image: 
+    name: "{{zs_image}}"
+    state: present
+
+# to rm zabbix-agent from image
+- name: rebuild zabbix-server image
+  docker_image:
+    path: "{{zs_dockerfile}}"
+    name: "{{zs_new_image_name}}"
+    tag: "{{zs_new_image_tag}}"
+    pull: no
+
+- stat:
+    path: "{{zs_image_archive}}"
+  register: zsia
+
+- name: archive zabbix-server image
+  docker_image:
+    name: "{{zs_new_image_name}}:{{zs_new_image_tag}}"
+    archive_path: "{{zs_image_archive}}"
+  when: zsia.stat.exists == False
+  
+
+- name: download docker image for zabbix-db
+  docker_image:
+    name: "{{zdb_image}}"
+    state: present
+
+- stat:
+    path: "{{zdb_image_archive}}"
+  register: zdia
+
+- name: archive zabbix-db image
+  docker_image:
+    name: "{{zdb_image}}"
+    archive_path: "{{zdb_image_archive}}"
+  when: zdia.stat.exists == False
+
+
+# ++++++++ rpm package for zabbix-agent ++++++++++++++++++++
+
+- stat:
+    path: "{{za_rpm_archive}}"
+  register: zara
+
+- name: download rpm package for zabbix-agent
+  get_url:
+    url: "{{zabbix_repo}}/{{zabbix_rpm_pkg}}"
+    dest: "{{za_rpm_archive}}"
+  when: zara.stat.exists == False

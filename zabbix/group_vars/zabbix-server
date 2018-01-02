@@ -1,0 +1,14 @@
+---
+# The variables file used by the playbooks in the zabbix-server group.
+# These don't have to be explicitly imported by vars_files: they are autopopulated.
+
+# parameters for zabbix server
+server_tmp_wksp: /tmp/zabbix-server-tmp
+server_src: "{{role_path}}"
+
+# parameters for zabbix-server image
+server_image_name: zabbix-server
+
+# parameters for zabbix-db image
+server_db_image_name: zabbix-db
+server_db_tmp_wksp: /tmp/zabbix-server-db-tmp

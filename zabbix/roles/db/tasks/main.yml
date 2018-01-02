@@ -1,0 +1,38 @@
+---
+# this role contains zabbix-server play for server node
+# target to run zabbix-db in docker container
+
+- name: remove tmp workspace
+  file:
+    path: "{{server_db_tmp_wksp}}"
+    state: absent
+
+- name: create tmp workspace
+  file:
+    path: "{{server_db_tmp_wksp}}"
+    state: directory
+    mode: 0755
+
+- name: copy db image to tmp workspace
+  copy:
+    src: "{{zdb_image_archive}}"
+    dest: "{{server_db_tmp_wksp}}/{{zdb_image_tar}}"
+
+- name: copy image env file to tmp workspace
+  template: >
+    src="{{server_src}}/templates/zdb_image_env.j2"
+    dest="{{server_db_tmp_wksp}}/zdb_image.env"
+
+- name: load image from archive
+  docker_image:
+    name: "{{zdb_image}}"
+    push: no
+    load_path: "{{server_db_tmp_wksp}}/{{zdb_image_tar}}"
+
+- name: docker run zabbix-db
+  docker_container:
+    name: "{{server_db_image_name}}"
+    env_file: "{{server_db_tmp_wksp}}/zdb_image.env"
+    image: "{{zdb_image}}"
+    published_ports:
+    - "3306:3306"
