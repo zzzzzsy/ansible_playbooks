@@ -2,7 +2,7 @@
 localhost
 
 [zabbix-server]
-192.168.10.10
+{{zs_server}}
 
 [zabbix-agent]
 192.168.10.11
