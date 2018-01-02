@@ -4,9 +4,9 @@
 
 # parameters for zabbix_agentd.conf
 agent_log: /var/log/zabbix/zabbix_agentd.log
-agent_server: 10.215.71.175
+agent_server: 192.168.10.10
 agent_listen_port: 10050
-agent_server_active: 10.215.71.175
+agent_server_active: 192.168.10.10
 agent_host_name: "{{ansible_hostname}}"
 
 # parameters for agent server
