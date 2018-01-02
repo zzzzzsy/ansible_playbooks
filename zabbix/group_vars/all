@@ -3,6 +3,7 @@
 # And all variables used by group builder-server (localhost)
 # These don't have to be explicitly imported by vars_files: they are autopopulated.
 
+zs_server: 192.168.10.10
 zs_image: million12/zabbix-server
 zs_image_tar: zabbix-server-image.tar
 zs_image_archive: "{{inventory_dir}}/roles/server/files/{{zs_image_tar}}"
